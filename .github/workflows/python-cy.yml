@@ -29,7 +29,5 @@ jobs:
           pip install pytest pytest-cov
           pytest --cov=app --cov-report=xml --cov-report=term
 
-      - name: Upload coverage to Codecov (opcional)
+      - name: Upload coverage to Codecov 
         uses: codecov/codecov-action@v3
-        with:
-          token: ${{ secrets.CODECOV_TOKEN }}  # opcional si tu repo es público
