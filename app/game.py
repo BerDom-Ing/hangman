@@ -13,3 +13,11 @@ class HangmanGame:
     def get_display_word(self):
         return ' '.join([letter if letter in self.guessed_letters else "_" for letter in self.word])
 
+    def is_game_over(self):
+        return self.lifes <= 0 or all(letter in self.guessed_letters for letter in self.word)
+    
+    def is_won(self):
+        return all(letter in self.guessed_letters for letter in self.word)
+    
+    def get_remaining_lifes(self):
+        return self.lifes
