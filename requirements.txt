@@ -1,2 +1,6 @@
 pytest
 pytest-cov
+flask
+selenium
+webdriver-manager
+behave
