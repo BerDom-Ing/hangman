@@ -53,23 +53,26 @@ def step_impl(context, username):
 # Steps para sesión iniciada
 @given('estoy logueado como "{username}"')
 def step_impl(context, username):
+    # Forzar ir a la página de inicio para estado limpio
     context.browser.get(context.base_url)
+    time.sleep(1)
     
-    # Si ya estamos en la página del juego, verificar si ya está logueado
-    if "username" in context.browser.current_url:
+    try:
+        # Buscar el formulario de login
+        username_input = context.browser.find_element(By.ID, "username")
+        username_input.clear()
+        username_input.send_keys(username)
+        
+        form = context.browser.find_element(By.ID, "login-form")
+        button = form.find_element(By.TAG_NAME, "button")
+        button.click()
+        time.sleep(2)  # Más tiempo de espera
+        
+    except Exception as e:
+        # Si no puede hacer login, verificar si ya está logueado
         page_text = context.browser.find_element(By.TAG_NAME, "body").text
-        if username in page_text:
-            return
-            
-    # Si no, hacer login
-    username_input = context.browser.find_element(By.ID, "username")
-    username_input.clear()
-    username_input.send_keys(username)
-    
-    form = context.browser.find_element(By.ID, "login-form")
-    button = form.find_element(By.TAG_NAME, "button")
-    button.click()
-    time.sleep(0.5)
+        if username not in page_text:
+            raise Exception(f"No se pudo hacer login: {e}")
 
 @when('accedo a la página del juego')
 def step_impl(context):

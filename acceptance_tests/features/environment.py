@@ -18,6 +18,15 @@ def before_all(context):
     # URL base (configurable por variable de entorno)
     context.base_url = os.getenv("BASE_URL", "http://localhost:5000")
 
+def before_scenario(context, scenario):
+    # Limpiar cookies/sesión antes de cada escenario
+    if hasattr(context, 'browser'):
+        context.browser.delete_all_cookies()
+        # Navegar a la página de inicio para resetear estado
+        context.browser.get(context.base_url)
+        time.sleep(1)
+
 def after_all(context):
     if hasattr(context, 'browser'):
         context.browser.quit()
+
