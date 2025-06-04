@@ -50,6 +50,9 @@ def new_game():
     session["initial_lifes"] = lifes  
     session["current_lifes"] = lifes  
     session["guessed_letters"] = []
+    session["game_over"] = False
+    session["won"] = False
+    
     return redirect(url_for("game"))
 
 @app.route("/game")
@@ -66,7 +69,10 @@ def game():
     
     # Restaurar el estado del juego
     game.guessed_letters = set(session["guessed_letters"])
-    game.lifes = session["current_lifes"]  
+    game.lifes = session["current_lifes"]
+
+    game_over = session.get("game_over", game.is_game_over())
+    won = session.get("won", game.is_won())
     
     return render_template(
         "game.html", 
@@ -74,8 +80,8 @@ def game():
         display_word=game.get_display_word(),
         lifes=game.get_remaining_lifes(),
         guessed_letters=sorted(game.guessed_letters),
-        game_over=game.is_game_over(),
-        won=game.is_won()
+        game_over=game_over,
+        won=won
     )
 
 @app.route("/guess", methods=["POST"])
@@ -98,7 +104,9 @@ def guess():
             
             game.guess(letter)
             session["guessed_letters"] = list(game.guessed_letters)
-            session["current_lifes"] = game.get_remaining_lifes()  
+            session["current_lifes"] = game.get_remaining_lifes()
+            session["game_over"] = game.is_game_over()
+            session["won"] = game.is_won()
     
     return redirect(url_for("game"))
 
