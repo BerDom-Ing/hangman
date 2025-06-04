@@ -42,7 +42,10 @@ def new_game():
     except ValueError:
         lifes = 6
 
-    word = random.choice(WORDS)
+    word = request.args.get("word")
+    if not word or word not in WORDS:
+        word = random.choice(WORDS)
+    
     session["word"] = word
     session["initial_lifes"] = lifes  
     session["current_lifes"] = lifes  
@@ -91,11 +94,11 @@ def guess():
             # Crear juego con vidas INICIALES
             game = HangmanGame(session["word"], session["initial_lifes"])
             game.guessed_letters = set(session["guessed_letters"])
-            game.lifes = session["current_lifes"]  # ← CAMBIAR: restaurar vidas actuales
+            game.lifes = session["current_lifes"] 
             
             game.guess(letter)
             session["guessed_letters"] = list(game.guessed_letters)
-            session["current_lifes"] = game.get_remaining_lifes()  # ← CAMBIAR: guardar vidas actuales
+            session["current_lifes"] = game.get_remaining_lifes()  
     
     return redirect(url_for("game"))
 

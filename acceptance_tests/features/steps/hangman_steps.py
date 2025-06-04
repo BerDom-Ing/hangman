@@ -92,21 +92,15 @@ def step_impl(context):
 # Steps para juego con palabra específica
 @given('estoy jugando una partida con la palabra "{word}"')
 def step_impl(context, word):
-    original_words = set_test_word(word)
-    context.original_words = original_words
-    context.test_word = word
-    
-    # Ir a new_game para asegurar que la palabra sea la especificada
-    context.browser.get(f"{context.base_url}/new_game")
-    time.sleep(0.5)
+    # Forzar la palabra específica
+    context.browser.get(f"{context.base_url}/new_game?word={word}")
+    time.sleep(1)
 
-@given('estoy jugando una partida con la palabra "{word}" y {lives} vidas')
-def step_impl(context, word, lives):
-    original_words = set_test_word(word)
-    context.original_words = original_words
-    context.test_word = word
-    context.browser.get(f"{context.base_url}/new_game?lifes={lives}")
-    time.sleep(0.5)
+@given('estoy jugando una partida con la palabra "{word}" y {lifes:d} vidas')
+def step_impl(context, word, lifes):
+    # Forzar palabra y vidas específicas
+    context.browser.get(f"{context.base_url}/new_game?word={word}&lifes={lifes}")
+    time.sleep(1)
 
 @when('adivino la letra "{letter}"')
 def step_impl(context, letter):
