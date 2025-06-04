@@ -43,10 +43,10 @@ def new_game():
         lifes = 6
 
     word = random.choice(WORDS)
-    game = HangmanGame(word, lifes)
     session["word"] = word
-    session["guessed_letters"] = list(game.guessed_letters)
-    session["lifes"] = game.get_remaining_lifes()
+    session["initial_lifes"] = lifes  
+    session["current_lifes"] = lifes  
+    session["guessed_letters"] = []
     return redirect(url_for("game"))
 
 @app.route("/game")
@@ -58,10 +58,12 @@ def game():
     if "word" not in session:
         return redirect(url_for("new_game"))
     
-    game = HangmanGame(session["word"], session["lifes"])
+    # Crear juego con vidas INICIALES
+    game = HangmanGame(session["word"], session["initial_lifes"])
     
     # Restaurar el estado del juego
     game.guessed_letters = set(session["guessed_letters"])
+    game.lifes = session["current_lifes"]  
     
     return render_template(
         "game.html", 
@@ -86,11 +88,14 @@ def guess():
     
     if letter and len(letter) == 1 and letter.isalpha():
         if letter not in session["guessed_letters"]:
-            game = HangmanGame(session["word"], session["lifes"])
+            # Crear juego con vidas INICIALES
+            game = HangmanGame(session["word"], session["initial_lifes"])
             game.guessed_letters = set(session["guessed_letters"])
+            game.lifes = session["current_lifes"]  # ← CAMBIAR: restaurar vidas actuales
+            
             game.guess(letter)
             session["guessed_letters"] = list(game.guessed_letters)
-            session["lifes"] = game.get_remaining_lifes()
+            session["current_lifes"] = game.get_remaining_lifes()  # ← CAMBIAR: guardar vidas actuales
     
     return redirect(url_for("game"))
 
