@@ -8,42 +8,61 @@
 <body class="bg-light">
     <div class="container mt-5">
         <div class="row justify-content-center">
-            <div class="col-md-8">
-                <div class="card shadow">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header text-center">
+                        <h1>Hangman Game</h1>
+                        <p>¡Hola, {{ session.username }}!</p>
+                    </div>
                     <div class="card-body">
-                        <h1 class="card-title text-center mb-4">Hangman Game</h1>
-                        <p class="text-center">Jugador: <strong>{{ username }}</strong></p>
-                        <div class="game-display text-center mb-4">
-                            <p class="word fs-2" id="display-word">{{ display_word }}</p>
-                            <p class="lives">Vidas restantes: <span id="lives-count" class="fw-bold">{{ lifes }}</span></p>
-                        </div>
-                        {% if game_over %}
-                            <div class="game-result alert {% if won %}alert-success{% else %}alert-danger{% endif %} text-center" id="game-result">
-                                {% if won %}
-                                    <h2>¡Has ganado, {{ username }}!</h2>
-                                {% else %}
-                                    <h2>¡Juego terminado!</h2>
-                                    <p>La palabra era: <span class="fw-bold">{{ session['word'] }}</span></p>
-                                {% endif %}
-                                <a href="{{ url_for('new_game') }}" class="btn btn-success mt-3">Jugar de nuevo</a>
+                        <!-- Mensaje de resultado del juego -->
+                        {% if game.is_won() %}
+                            <div id="game-result" class="alert alert-success text-center">
+                                ¡Has ganado! 🎉
+                            </div>
+                        {% elif game.is_game_over() %}
+                            <div id="game-result" class="alert alert-danger text-center">
+                                Juego terminado. La palabra era: {{ session.word }}
                             </div>
                         {% else %}
-                            <form action="{{ url_for('guess') }}" method="post" id="guess-form" class="row g-3 justify-content-center mb-3">
-                                <div class="col-auto">
-                                    <input type="text" name="letter" maxlength="1" pattern="[a-zA-Z]" required id="letter-input" class="form-control" placeholder="Ingresa una letra">
-                                </div>
-                                <div class="col-auto">
-                                    <button type="submit" class="btn btn-primary">Adivinar</button>
-                                </div>
-                            </form>
+                            <div id="game-result" style="display: none;"></div>
                         {% endif %}
-                        <div class="guessed-letters text-center mb-3">
-                            <p class="mb-1">Letras adivinadas:</p>
-                            <p id="guessed-letters" class="fw-bold">{{ ', '.join(guessed_letters) }}</p>
+
+                        <!-- Palabra a adivinar -->
+                        <div class="text-center mb-3">
+                            <h2 id="display-word" class="font-monospace">{{ game.get_display_word() }}</h2>
                         </div>
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ url_for('new_game') }}" class="btn btn-secondary">Nuevo juego</a>
-                            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger logout">Cerrar sesión</a>
+
+                        <!-- Vidas restantes -->
+                        <div class="text-center mb-3">
+                            <span class="badge bg-primary fs-6">
+                                Vidas restantes: <span id="lives-count">{{ game.get_remaining_lifes() }}</span>
+                            </span>
+                        </div>
+
+                        <!-- Formulario para adivinar letra -->
+                        {% if not game.is_game_over() and not game.is_won() %}
+                        <form id="guess-form" action="{{ url_for('guess') }}" method="post" class="text-center">
+                            <div class="mb-3">
+                                <input type="text" id="letter-input" name="letter" maxlength="1" 
+                                       class="form-control form-control-lg text-center" 
+                                       placeholder="Ingresa una letra" required>
+                            </div>
+                            <button type="submit" class="btn btn-primary btn-lg">Adivinar</button>
+                        </form>
+                        {% endif %}
+
+                        <!-- Letras ya intentadas -->
+                        {% if session.guessed_letters %}
+                        <div class="mt-3">
+                            <small class="text-muted">Letras intentadas: {{ ', '.join(session.guessed_letters) }}</small>
+                        </div>
+                        {% endif %}
+
+                        <!-- Opciones del juego -->
+                        <div class="text-center mt-4">
+                            <a href="{{ url_for('new_game') }}" class="btn btn-success me-2">Nuevo Juego</a>
+                            <a href="{{ url_for('logout') }}" class="btn btn-secondary">Cerrar Sesión</a>
                         </div>
                     </div>
                 </div>
