@@ -17,7 +17,7 @@
                             <p class="word fs-2" id="display-word">{{ display_word }}</p>
                             <p class="lives">Vidas restantes: <span id="lives-count" class="fw-bold">{{ lifes }}</span></p>
                         <div id="game-result" class="text-center mb-3">
-                            {% if game_over %}
+                            {% if game_over or won%}
                                 <div class="alert {% if won %}alert-success{% else %}alert-danger{% endif %}">
                                     {% if won %}
                                         <h2>¡Has ganado, {{ username }}!</h2>
