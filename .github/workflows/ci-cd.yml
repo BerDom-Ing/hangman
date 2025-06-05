@@ -60,9 +60,10 @@ jobs:
     - name: Deploy to alwaysdata
       uses: appleboy/ssh-action@v0.1.7
       with:
-        host: ssh2.alwaysdata.com
+        host: ssh-bernixsoft.alwaysdata.net
         username: ${{ secrets.ALWAYSDATA_USER }}
         key: ${{ secrets.ALWAYSDATA_SSH_KEY }}
+        passphrase: ${{ secrets.ALWAYSDATA_SSH_PASSPHRASE }}
         script: |
           cd /home/bernixsoft/www/myapp
           git pull origin main
