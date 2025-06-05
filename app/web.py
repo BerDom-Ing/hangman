@@ -43,7 +43,7 @@ def new_game():
         lifes = 6
 
     word = request.args.get("word")
-    if not word or word not in WORDS:
+    if not word:
         word = random.choice(WORDS)
     
     session["word"] = word
