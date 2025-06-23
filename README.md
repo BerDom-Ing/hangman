@@ -13,3 +13,10 @@ export FLASK_APP=app.web
 flask run
 
 No uses `python app/web.py` para ejecutar la app, ya que eso puede causar errores de importación.
+
+
+Para los unit tests:
+pytest tests
+
+Analisis estatico de codigo:
+pylint app/game.py app/web.py tests/test_game.py
