@@ -38,7 +38,7 @@ def step_impl(context, button_text):
             links[0].click()
         else:
             assert False, f"No se encontró botón o enlace con texto '{button_text}'"
-    time.sleep(0.5)  # Esperar a que la página se cargue
+    time.sleep(2)  # Esperar a que la página se cargue
 
 @then('debería ver la página del juego')
 def step_impl(context):
