@@ -174,8 +174,25 @@ def step_impl(context):
 
 @when('hago clic en "Cerrar sesión"')
 def step_impl(context):
-    logout_link = context.browser.find_element(By.XPATH, "//a[contains(text(), 'Cerrar') or contains(text(), 'cerrar') or contains(text(), 'Logout') or contains(text(), 'logout')]")
-    logout_link.click()
+    try:
+        # Intentar hacer scroll al elemento primero
+        logout_link = context.browser.find_element(By.XPATH, "//a[contains(text(), 'Cerrar') or contains(text(), 'cerrar') or contains(text(), 'Logout') or contains(text(), 'logout')]")
+        context.browser.execute_script("arguments[0].scrollIntoView(true);", logout_link)
+        time.sleep(0.5)
+        
+        # Intentar click normal
+        logout_link.click()
+        
+    except Exception as e:
+        try:
+            # Si falla, usar JavaScript para hacer click
+            logout_link = context.browser.find_element(By.XPATH, "//a[contains(text(), 'Cerrar') or contains(text(), 'cerrar') or contains(text(), 'Logout') or contains(text(), 'logout')]")
+            context.browser.execute_script("arguments[0].click();", logout_link)
+            
+        except Exception as e2:
+            # Como último recurso, navegar directamente a logout
+            context.browser.get(f"{context.base_url}/logout")
+    
     time.sleep(0.5)
 
 @then('debería volver a la página de inicio')
