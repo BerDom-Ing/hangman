@@ -35,7 +35,7 @@ def test_guess_word_with_two_same_letters():
     game.guess("e")
     assert game.get_display_word() == "_ e t t e _"
     game.guess("r")
-    assert game.get_display_word() == " e t t e r"
+    assert game.get_display_word() == "_ e t t e r"
 
 def test_game_over_no_lifes():
     game = HangmanGame("python", 2)
