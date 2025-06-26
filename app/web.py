@@ -17,7 +17,7 @@ def index():
     """Render the main page or redirect to game if user is logged in."""
     # Si el usuario ya está logueado, redirige al juego
     if "username" in session:
-        return redirect(url_for("game"))
+        redirect(url_for("game_view"))
     return render_template("index.html")
 
 
@@ -64,7 +64,7 @@ def new_game():
     session["game_over"] = False
     session["won"] = False
 
-    return redirect(url_for("game"))
+    redirect(url_for("game_view"))
 
 
 @app.route("/game")
