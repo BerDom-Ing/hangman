@@ -17,7 +17,7 @@ def index():
     """Render the main page or redirect to game if user is logged in."""
     # Si el usuario ya está logueado, redirige al juego
     if "username" in session:
-        redirect(url_for("game_view"))
+        return redirect(url_for("game"))
     return render_template("index.html")
 
 
@@ -64,11 +64,11 @@ def new_game():
     session["game_over"] = False
     session["won"] = False
 
-    redirect(url_for("game_view"))
+    return redirect(url_for("game"))
 
 
 @app.route("/game")
-def game_view():
+def game():
     """Display the game page."""
     # Verificar si el usuario está logueado
     if "username" not in session:
@@ -123,7 +123,7 @@ def guess():
             session["game_over"] = hangman_game.is_game_over()
             session["won"] = hangman_game.is_won()
 
-    return redirect(url_for("game_view"))
+    return redirect(url_for("game"))
 
 
 if __name__ == "__main__":
